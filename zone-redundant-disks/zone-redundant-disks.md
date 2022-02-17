@@ -70,7 +70,7 @@ sudo mkdir /lrsdisk
 sudo mount /dev/sdd1 /lrsdisk
 
 # Download fio configs
-git clone TBD
+git clone https://github.com/tkubica12/cloud-storage-tests.git
 
 # Install fio
 sudo apt-get -y update
@@ -132,7 +132,7 @@ sudo mkdir /zrsdisk   # Do not make FS (this is done already), just mount it
 sudo mount /dev/sdc1 /zrsdisk
 
 # Download fio configs
-git clone TBD
+git clone https://github.com/tkubica12/cloud-storage-tests.git
 
 # Install fio
 sudo apt-get -y update
