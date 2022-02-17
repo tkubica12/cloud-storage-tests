@@ -58,6 +58,38 @@ az serial-console connect -n z1 -g disks
 # Clone repo
 git clone https://github.com/tkubica12/cloud-storage-tests.git
 
+# Provision and mount disks
 sudo bash ./cloud-storage-tests/disks/provision.sh
+
+# Install fio
+sudo apt update
+sudo apt install fio -y
+
+# Go to configs folder
+cd ./cloud-storage-tests/disks
+
+# Latency read
+sudo fio --runtime 30 sync-r-standardhdd.ini    #  3-20 ms when repeated multiple times
+sudo fio --runtime 30 sync-r-standardssd.ini    #  ms
+sudo fio --runtime 30 sync-r-premiumssd.ini     #  ms
+sudo fio --runtime 30 sync-r-ultrassd.ini       #  ms
+
+# Latency write
+sudo fio --runtime 30 sync-w-standardhdd.ini    #  2.9 ms
+sudo fio --runtime 30 sync-w-standardssd.ini    #  1.3 ms
+sudo fio --runtime 30 sync-w-premiumssd.ini     #  1.3 ms
+sudo fio --runtime 30 sync-w-ultrassd.ini       #  ms
+
+# IOPS read
+sudo fio --runtime 30 async-r-standardhdd.ini    #  IOPS
+sudo fio --runtime 30 async-r-standardssd.ini    #  IOPS
+sudo fio --runtime 30 async-r-premiumssd.ini     #  IOPS
+sudo fio --runtime 30 async-r-ultrassd.ini       #  IOPS
+
+# IOPS write
+sudo fio --runtime 30 async-w-standardhdd.ini    #  IOPS
+sudo fio --runtime 30 async-w-standardssd.ini    #  IOPS
+sudo fio --runtime 30 async-w-premiumssd.ini     #  IOPS
+sudo fio --runtime 30 async-w-ultrassd.ini       #  IOPS
 
 ```
