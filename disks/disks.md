@@ -5,12 +5,10 @@ Measure 3 different performance aspects:
 - Throughput (measured as large iodepth 1M block)
 
 Test following disk options:
-- Local temp disk
 - Standard HDD1 TB
 - Standard SSD 1TB
 - Premium SSD 1TB
 - Ultra SSD 1TB with 20k provisioned IOPS and 300 MB/s provisioned throughput
-- Local NVMe (L-series VM) - TBD
 
 Prepare infrastructure
 
@@ -81,21 +79,20 @@ sudo fio --runtime 30 sync-w-premiumssd.ini     #  1.3 ms
 sudo fio --runtime 30 sync-w-ultrassd.ini       #  0.4 ms
 
 # IOPS read
-sudo fio --runtime 30 async-r-standardhdd.ini    #   561 IOPS
+sudo fio --runtime 30 async-r-standardhdd.ini    #   561 IOPS (expected 500 IOPS)
 sudo fio --runtime 30 async-r-standardssd.ini    #  1001 IOPS (this is burst on 1TB SKU - non-bursted performance is 500 IOPS)
-sudo fio --runtime 30 async-r-premiumssd.ini     #  5210 IOPS
-sudo fio --runtime 30 async-r-ultrassd.ini       # 21800 IOPS
+sudo fio --runtime 30 async-r-premiumssd.ini     #  5210 IOPS (expected 5000 IOPS)
+sudo fio --runtime 30 async-r-ultrassd.ini       # 21800 IOPS (20k provisioned)
 
 # IOPS write
-sudo fio --runtime 30 async-w-standardhdd.ini    #   560 IOPS
+sudo fio --runtime 30 async-w-standardhdd.ini    #   560 IOPS (expected 500 IOPS)
 sudo fio --runtime 30 async-w-standardssd.ini    #  1000 IOPS (this is burst on 1TB SKU - non-bursted performance is 500 IOPS)
-sudo fio --runtime 30 async-w-premiumssd.ini     #  5180 IOPS
-sudo fio --runtime 30 async-w-ultrassd.ini       # 22400 IOPS
+sudo fio --runtime 30 async-w-premiumssd.ini     #  5180 IOPS (expected 5000 IOPS)
+sudo fio --runtime 30 async-w-ultrassd.ini       # 22400 IOPS (20k provisioned)
 
-# Througput
-sudo fio --runtime 30 async-w-standardhdd.ini    #   560 IOPS
-sudo fio --runtime 30 async-w-standardssd.ini    #  1000 IOPS (this is burst on 1TB SKU - non-bursted performance is 500 IOPS)
-sudo fio --runtime 30 async-w-premiumssd.ini     #  5180 IOPS
-sudo fio --runtime 30 async-w-ultrassd.ini       # 22400 IOPS
-
+# Throughput
+sudo fio --runtime 30 large-r-standardhdd.ini    #   97 MiB/s (expected 60 MiB/s)
+sudo fio --runtime 30 large-r-standardssd.ini    #  202 MiB/s (expected 150 MiB/s burst on 1TB SKU - non-bursted performance expected as 60 MiB/s)
+sudo fio --runtime 30 large-r-premiumssd.ini     #  198 MiB/s (expected 200 MiB/s)
+sudo fio --runtime 30 large-r-ultrassd.ini       #  320 MiB/s (300 MiB/s provisioned)
 ```
