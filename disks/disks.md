@@ -70,26 +70,32 @@ cd ./cloud-storage-tests/disks
 
 # Latency read
 sudo fio --runtime 30 sync-r-standardhdd.ini    #  3-20 ms when repeated multiple times
-sudo fio --runtime 30 sync-r-standardssd.ini    #  ms
-sudo fio --runtime 30 sync-r-premiumssd.ini     #  ms
-sudo fio --runtime 30 sync-r-ultrassd.ini       #  ms
+sudo fio --runtime 30 sync-r-standardssd.ini    #  2.3 ms
+sudo fio --runtime 30 sync-r-premiumssd.ini     #  2.4 ms
+sudo fio --runtime 30 sync-r-ultrassd.ini       #  0.4 ms
 
 # Latency write
 sudo fio --runtime 30 sync-w-standardhdd.ini    #  2.9 ms
 sudo fio --runtime 30 sync-w-standardssd.ini    #  1.3 ms
 sudo fio --runtime 30 sync-w-premiumssd.ini     #  1.3 ms
-sudo fio --runtime 30 sync-w-ultrassd.ini       #  ms
+sudo fio --runtime 30 sync-w-ultrassd.ini       #  0.4 ms
 
 # IOPS read
-sudo fio --runtime 30 async-r-standardhdd.ini    #  IOPS
-sudo fio --runtime 30 async-r-standardssd.ini    #  IOPS
-sudo fio --runtime 30 async-r-premiumssd.ini     #  IOPS
-sudo fio --runtime 30 async-r-ultrassd.ini       #  IOPS
+sudo fio --runtime 30 async-r-standardhdd.ini    #   561 IOPS
+sudo fio --runtime 30 async-r-standardssd.ini    #  1001 IOPS (this is burst on 1TB SKU - non-bursted performance is 500 IOPS)
+sudo fio --runtime 30 async-r-premiumssd.ini     #  5210 IOPS
+sudo fio --runtime 30 async-r-ultrassd.ini       # 21800 IOPS
 
 # IOPS write
-sudo fio --runtime 30 async-w-standardhdd.ini    #  IOPS
-sudo fio --runtime 30 async-w-standardssd.ini    #  IOPS
-sudo fio --runtime 30 async-w-premiumssd.ini     #  IOPS
-sudo fio --runtime 30 async-w-ultrassd.ini       #  IOPS
+sudo fio --runtime 30 async-w-standardhdd.ini    #   560 IOPS
+sudo fio --runtime 30 async-w-standardssd.ini    #  1000 IOPS (this is burst on 1TB SKU - non-bursted performance is 500 IOPS)
+sudo fio --runtime 30 async-w-premiumssd.ini     #  5180 IOPS
+sudo fio --runtime 30 async-w-ultrassd.ini       # 22400 IOPS
+
+# Througput
+sudo fio --runtime 30 async-w-standardhdd.ini    #   560 IOPS
+sudo fio --runtime 30 async-w-standardssd.ini    #  1000 IOPS (this is burst on 1TB SKU - non-bursted performance is 500 IOPS)
+sudo fio --runtime 30 async-w-premiumssd.ini     #  5180 IOPS
+sudo fio --runtime 30 async-w-ultrassd.ini       # 22400 IOPS
 
 ```
