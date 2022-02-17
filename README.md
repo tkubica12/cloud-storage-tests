@@ -6,3 +6,5 @@ This repo contains few tests for different storage systems in Azure.
 # Remote file system storage
 Please see [remote-fs/remote-fs.md](remote-fs/remote-fs.md)
 
+# Zone redundant disks (ZRS)
+Please see [zone-redundant-disks/zone-redundant-disks.md](zone-redundant-disks/zone-redundant-disks.md)
