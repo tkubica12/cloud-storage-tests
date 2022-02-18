@@ -11,3 +11,6 @@ Please see [remote-fs/remote-fs.md](remote-fs/remote-fs.md)
 
 # Zone redundant disks (ZRS)
 Please see [zone-redundant-disks/zone-redundant-disks.md](zone-redundant-disks/zone-redundant-disks.md)
+
+# Shared disks
+Please see [shared-disks/shared-disks.md](shared-disks/shared-disks.md)
