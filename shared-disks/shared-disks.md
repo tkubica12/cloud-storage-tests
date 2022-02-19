@@ -89,7 +89,7 @@ sudo touch /shareddisk/z1.txt
 Go to z2 and try to read vs. write
 
 ```bash
-# Connect to z1
+# Connect to zě
 az serial-console connect -n z2 -g shareddisk
 
 # Install SCSI utils
@@ -164,5 +164,5 @@ sudo sg_persist --out --reserve --param-rk=abc123 --prout-type=7 /dev/sdc  # Res
 
 # Mount
 sudo mount /dev/sdc1 /shareddisk
-sudo touch /shareddisk/z2-B.txt   # Write will eventually fail
+sudo touch /shareddisk/z2-B.txt   # SUCCESS
 ```
