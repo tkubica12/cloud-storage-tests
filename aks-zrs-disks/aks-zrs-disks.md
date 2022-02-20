@@ -60,7 +60,7 @@ kubectl apply -f .
 # Cordon node on which singlezonepool-classic is running and measure downtime
 pod=$(kubectl get pods -l app=singlezonepool-classic -o jsonpath='{.items[0].metadata.name}')
 node=$(kubectl get pod $pod -o=jsonpath='{.spec.nodeName}')
-kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 146 seconds (out of which 30s is termination grace period)
+kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 146 seconds (out of which 30s is Pod termination grace period)
 kubectl uncordon $node
 
 # Cordon node on which multizonepool-classic is running and measure downtime
@@ -73,16 +73,21 @@ kubectl uncordon $node
 disk=$(kubectl get pvc multizonepool-zrs-shared -o=jsonpath='{.spec.volumeName}')
 az disk show -n $disk -g mc_aks_aks_westeurope --query managedByExtended -o tsv
 
+: `
+/subscriptions/a0f4a733-4fce-4d49-b8a8-d30541fc1b45/resourceGroups/MC_aks_aks_westeurope/providers/Microsoft.Compute/virtualMachineScaleSets/aks-multizone-20099732-vmss/virtualMachines/aks-multizone-20099732-vmss_1
+/subscriptions/a0f4a733-4fce-4d49-b8a8-d30541fc1b45/resourceGroups/MC_aks_aks_westeurope/providers/Microsoft.Compute/virtualMachineScaleSets/aks-multizone-20099732-vmss/virtualMachines/aks-multizone-20099732-vmss_0
+`
+
 # Cordon node on which singlezonepool-zrs-shared is running and measure downtime
 pod=$(kubectl get pods -l app=singlezonepool-zrs-shared -o jsonpath='{.items[0].metadata.name}')
 node=$(kubectl get pod $pod -o=jsonpath='{.spec.nodeName}')
-kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 64 seconds (out of which 30s is termination grace period)
+kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 64 seconds (out of which 30s is Pod termination grace period)
 kubectl uncordon $node
 
 # Cordon node on which multizonepool-zrs-shared is running and measure downtime
 pod=$(kubectl get pods -l app=multizonepool-zrs-shared -o jsonpath='{.items[0].metadata.name}')
 node=$(kubectl get pod $pod -o=jsonpath='{.spec.nodeName}')
-kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 72 seconds (out of which 30s is termination grace period)
+kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 72 seconds (out of which 30s is Pod termination grace period)
 kubectl uncordon $node
 
 ```
