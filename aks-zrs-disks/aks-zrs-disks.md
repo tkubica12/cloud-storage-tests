@@ -27,7 +27,12 @@ az aks nodepool add -n singlezone \
     --cluster-name aks 
 
 # Get credentials
-az aks get-credentials -n aks -g aks --admin --overwrite-existing
+az aks get-credentials -n aks -g aks --admin --overwrite-
+
+# Configure RBAC for cluster idenity (for later use by CSI driver)
+az role assignment create --role Contributor \
+  -g mc_aks_aks_westeurope \
+  --addignee-object-id $(az identity show -n aks-agentpool -g mc_aks_aks_westeurope --query objectId -o tsv)
 
 # Check nodes and zones
 kubectl get nodes -L topology.kubernetes.io/zone -L multizone
