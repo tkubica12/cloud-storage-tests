@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multizonepool-classic
+spec:
+  selector:
+    matchLabels:
+      app: multizonepool-classic
+  template:
+    metadata:
+      labels:
+        app: multizonepool-classic
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        command: ["/bin/bash"]
+        args: ["-c", "while true; do date | tee -a /data/myfile.txt; sleep 15; done"]
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: multizonepool-classic
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: multizone
+                operator: In
+                values:
+                - "true"   
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: multizonepool-classic
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: managed
+  resources:
+    requests:
+      storage: 30Gi

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multizonepool-zrs-shared
+spec:
+  selector:
+    matchLabels:
+      app: multizonepool-zrs-shared
+  template:
+    metadata:
+      labels:
+        app: multizonepool-zrs-shared
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        command: ["/bin/bash"]
+        args: ["-c", "while true; do date | tee -a /data/myfile.txt; sleep 15; done"]
+        volumeMounts:
+          - name: data
+            mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: multizonepool-zrs-shared
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: multizone
+                operator: In
+                values:
+                - "true"   
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: multizonepool-zrs-shared
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: zrs-shared-class
+  resources:
+    requests:
+      storage: 30Gi
