@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: prepare-nvme
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: prepare-nvme
+  template:
+    metadata:
+      labels:
+        app: prepare-nvme
+    spec:
+      initContainers:
+        - name: ubuntu
+          image: ubuntu
+          securityContext:
+            privileged: true
+          command: ["/bin/sh"]
+          args: ["-c", "mkfs.ext4 -E nodiscard /dev/nvme0n1; mount /dev/nvme0n1 /mynvme; mkdir /mynvme/disk1; mkdir /mynvme/disk2; mkdir /mynvme/disk3"]
+          volumeMounts:
+            - mountPath: /mynvme
+              name: storage
+              mountPropagation: "Bidirectional"
+      containers:
+        - name: donothing
+          image: busybox
+          command: ["/bin/sh"]
+          args: ["-c", "while true; do sleep 60; done"]
+      volumes:
+        - name: storage
+          hostPath:
+            path: /mynvme

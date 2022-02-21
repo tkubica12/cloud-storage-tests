@@ -1,0 +1,10 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: topolvm-provisioner-ssd
+provisioner: topolvm.cybozu.com
+parameters:
+  "csi.storage.k8s.io/fstype": "xfs"
+  "topolvm.cybozu.com/device-class": "nvme"
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true

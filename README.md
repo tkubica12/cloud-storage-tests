@@ -17,3 +17,6 @@ Please see [shared-disks/shared-disks.md](shared-disks/shared-disks.md)
 
 # AKS with zone-redundant disks and multi-attach to speed up failover
 Please see [aks-zrs-disks/aks-zrs-disks.md](aks-zrs-disks/aks-zrs-disks.md)
+
+# AKS using local storage (OS disk, temp disk, NVMe)
+Please see [aks-local-storage/aks-local-storage.md](aks-local-storage/aks-local-storage.md)

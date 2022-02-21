@@ -1,0 +1,17 @@
+apiVersion: topolvm.cybozu.com/v2
+kind: TopolvmCluster
+metadata:
+  name: topolvmcluster-sample
+  namespace: nativestor-system
+spec:
+  topolvmVersion: alaudapublic/topolvm:2.0.0
+  # certsSecret: mutatingwebhook
+  storage:
+    useAllNodes: true
+    useAllDevices: false
+    useLoop: false
+    volumeGroupName: "nvme"
+    className: "nvme"
+    devices:
+      - name: "/dev/nvme0n1"
+        type: "disk"

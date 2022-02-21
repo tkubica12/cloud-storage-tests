@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+spec:
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: test
+        image: ubuntu
+        command: ["/bin/bash"]
+        args: ["-c", "while true; do date | tee /path/$(date +'%s').txt; sleep 15; done"]
+        volumeMounts:
+          - mountPath: /path
+            name: storage
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 1Gi
