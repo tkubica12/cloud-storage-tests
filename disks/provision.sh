@@ -42,7 +42,7 @@ sudo mkfs.ext4 /dev/sde1
 sudo mkdir /premiumssd
 sudo mount /dev/sde1 /premiumssd
 
-# Prepare and mount Ultra SSD
+# Prepare and mount Premium SSD v2
 sudo fdisk /dev/sdf <<EOF
 n
 p
@@ -53,5 +53,19 @@ p
 w
 EOF
 sudo mkfs.ext4 /dev/sdf1
+sudo mkdir /premiumssd_v2
+sudo mount /dev/sdf1 /premiumssd_v2
+
+# Prepare and mount Ultra SSD
+sudo fdisk /dev/sdg <<EOF
+n
+p
+1
+1
+
+
+w
+EOF
+sudo mkfs.ext4 /dev/sdg1
 sudo mkdir /ultrassd
-sudo mount /dev/sdf1 /ultrassd
+sudo mount /dev/sdg1 /ultrassd
