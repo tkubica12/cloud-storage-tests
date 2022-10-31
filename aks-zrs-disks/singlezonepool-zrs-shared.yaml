@@ -40,7 +40,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: zrs-shared-class
+  storageClassName: azuredisk-premium-ssd-zrs-replicas
   resources:
     requests:
       storage: 30Gi

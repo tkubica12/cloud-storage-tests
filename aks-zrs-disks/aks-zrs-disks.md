@@ -15,7 +15,8 @@ az aks create -n aks \
     --node-vm-size Standard_B2s \
     --zones 1 2 \
     --nodepool-name multizone \
-    --nodepool-labels multizone=true
+    --nodepool-labels multizone=true \
+    --disk-driver-version v2
 
 # Add single-zone nodepool
 az aks nodepool add -n singlezone \
@@ -27,12 +28,12 @@ az aks nodepool add -n singlezone \
     --cluster-name aks 
 
 # Get credentials
-az aks get-credentials -n aks -g aks --admin --overwrite-
+az aks get-credentials -n aks -g aks --admin --overwrite-existing
 
 # Configure RBAC for cluster idenity (for later use by CSI driver)
 az role assignment create --role Contributor \
   -g mc_aks_aks_westeurope \
-  --addignee-object-id $(az identity show -n aks-agentpool -g mc_aks_aks_westeurope --query objectId -o tsv)
+  --assignee $(az identity show -n aks-agentpool -g mc_aks_aks_westeurope --query clientId -o tsv)
 
 # Check nodes and zones
 kubectl get nodes -L topology.kubernetes.io/zone -L multizone
@@ -51,10 +52,10 @@ Install Azure storage CSI driver v2 (preview in time of writing)
 ```bash
 helm repo add azuredisk-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/charts
 
-helm install azuredisk-csi-driver-v2 azuredisk-csi-driver/azuredisk-csi-driver \
+helm upgrade -i azuredisk-csi-driver-v2 azuredisk-csi-driver/azuredisk-csi-driver \
   --namespace kube-system \
-  --version v2.0.0-alpha.1 \
-  --values=https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/charts/v2.0.0-alpha.1/azuredisk-csi-driver/side-by-side-values.yaml
+  --version v2.0.0-beta.6 \
+  --values=https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/master/charts/v2.0.0-beta.6/azuredisk-csi-driver/side-by-side-values.yaml
 ```
 
 
@@ -65,7 +66,7 @@ kubectl apply -f .
 # Cordon node on which singlezonepool-classic is running and measure downtime
 pod=$(kubectl get pods -l app=singlezonepool-classic -o jsonpath='{.items[0].metadata.name}')
 node=$(kubectl get pod $pod -o=jsonpath='{.spec.nodeName}')
-kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 146 seconds (out of which 30s is Pod termination grace period)
+kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 80 seconds (out of which 30s is Pod termination grace period)
 kubectl uncordon $node
 
 # Cordon node on which multizonepool-classic is running and measure downtime
@@ -86,13 +87,13 @@ az disk show -n $disk -g mc_aks_aks_westeurope --query managedByExtended -o tsv
 # Cordon node on which singlezonepool-zrs-shared is running and measure downtime
 pod=$(kubectl get pods -l app=singlezonepool-zrs-shared -o jsonpath='{.items[0].metadata.name}')
 node=$(kubectl get pod $pod -o=jsonpath='{.spec.nodeName}')
-kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 64 seconds (out of which 30s is Pod termination grace period)
+kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 45 seconds (out of which 30s is Pod termination grace period)
 kubectl uncordon $node
 
 # Cordon node on which multizonepool-zrs-shared is running and measure downtime
 pod=$(kubectl get pods -l app=multizonepool-zrs-shared -o jsonpath='{.items[0].metadata.name}')
 node=$(kubectl get pod $pod -o=jsonpath='{.spec.nodeName}')
-kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 72 seconds (out of which 30s is Pod termination grace period)
+kubectl drain $node --delete-emptydir-data --ignore-daemonsets --  # 45 seconds (out of which 30s is Pod termination grace period)
 kubectl uncordon $node
 
 ```
