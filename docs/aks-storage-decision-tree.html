@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.3/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@6.7.0"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.14.3"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.14.3/dist/index.umd.min.js"></script><script>(r => {
+                setTimeout(r);
+              })(() => {
+  const {
+    markmap,
+    mm
+  } = window;
+  const toolbar = new markmap.Toolbar();
+  toolbar.attach(mm);
+  const el = toolbar.render();
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root, jsonOptions) => {
+        const markmap = getMarkmap();
+        window.mm = markmap.Markmap.create('svg#mindmap', (getOptions || markmap.deriveOptions)(jsonOptions), root);
+      })(() => window.markmap,null,{"type":"heading","depth":0,"payload":{"lines":[0,1]},"content":"AKS storage","children":[{"type":"heading","depth":1,"payload":{"lines":[2,3]},"content":"Singleton","children":[{"type":"list_item","depth":2,"payload":{"lines":[3,4]},"content":"Single-instance for legacy app or cheap &quot;HA&quot;","children":[{"type":"list_item","depth":3,"payload":{"lines":[4,5]},"content":"Nodepool upgrade = some downtime"},{"type":"list_item","depth":3,"payload":{"lines":[5,6]},"content":"Node crash = potential app-level data corruption (eg. DB recovery needed after restart)"}]},{"type":"list_item","depth":2,"payload":{"lines":[6,7]},"content":"Moderate performance needs","children":[{"type":"list_item","depth":3,"payload":{"lines":[7,8]},"content":"Prefer ZRS NAS (Azure Files) if file based solution is enough (eg. no need for hard links)"},{"type":"list_item","depth":3,"payload":{"lines":[8,9]},"content":"For block use iSCSI based Azure Elastic SAN (in preview)"},{"type":"list_item","depth":3,"payload":{"lines":[9,12]},"content":"For higher performance or lower cost use ZRS-based Azure Disk<br>\n(slower failover times, use CSI v2 with multi-attach to achieve about 15s reconnection)<br>\n(beware of mount limits per node)"}]},{"type":"list_item","depth":2,"payload":{"lines":[12,13]},"content":"High performance","children":[{"type":"list_item","depth":3,"payload":{"lines":[13,14]},"content":"Due to physics you gonna need in-AZ storage therefore no AZ redundancy"},{"type":"list_item","depth":3,"payload":{"lines":[14,15]},"content":"Prefer Azure NetApp Files (Premium or Ultra tier)"},{"type":"list_item","depth":3,"payload":{"lines":[15,16]},"content":"Use Premium SSD v2 LRS or UltraSSD"},{"type":"list_item","depth":3,"payload":{"lines":[16,17]},"content":"To survive AZ failure you need DR eg. backups to different AZ"}]}]},{"type":"heading","depth":1,"payload":{"lines":[18,19]},"content":"Shared storage","children":[{"type":"list_item","depth":2,"payload":{"lines":[19,20]},"content":"Multi-instance solution, typically legacy DB cluster or web farm"},{"type":"list_item","depth":2,"payload":{"lines":[20,21]},"content":"Moderate performance needs","children":[{"type":"list_item","depth":3,"payload":{"lines":[21,22]},"content":"Prefer ZRS NAS (Azure Files) if file based solution is enough (eg. no need for hard links)"},{"type":"list_item","depth":3,"payload":{"lines":[22,23]},"content":"Try to avoid block devices due to complexity","children":[{"type":"list_item","depth":4,"payload":{"lines":[23,24]},"content":"you must use volumeMode:block"},{"type":"list_item","depth":4,"payload":{"lines":[24,25]},"content":"you need clustered file system to deal with SCSI PR (no ext4 or xfs !)"},{"type":"list_item","depth":4,"payload":{"lines":[25,26]},"content":"possible if doe right, but complex - use Standard SSD or Premium SSD v2 for zone redundancy (ZRS)"}]}]},{"type":"list_item","depth":2,"payload":{"lines":[26,27]},"content":"High performance","children":[{"type":"list_item","depth":3,"payload":{"lines":[27,28]},"content":"Prefer Azure NetApp Files (Premium or Ultra tier)"},{"type":"list_item","depth":3,"payload":{"lines":[28,29]},"content":"Try to avoid block devices due to complexity","children":[{"type":"list_item","depth":4,"payload":{"lines":[29,30]},"content":"you must use volumeMode:block"},{"type":"list_item","depth":4,"payload":{"lines":[30,31]},"content":"you need clustered file system to deal with SCSI PR (no ext4 or xfs !)"},{"type":"list_item","depth":4,"payload":{"lines":[31,32]},"content":"possible if done right, but complex - use Ultra SSD or Premium SSD v2 for high performance (LRS)"}]}]}]},{"type":"heading","depth":1,"payload":{"lines":[34,35]},"content":"Shared nothing","children":[{"type":"list_item","depth":2,"payload":{"lines":[35,36]},"content":"Each instance comes with its own storage and data is replicated on app/db level (eg. Elastic, Cassandra, Kafka, ...)"},{"type":"list_item","depth":2,"payload":{"lines":[36,37]},"content":"Moderate performance","children":[{"type":"list_item","depth":3,"payload":{"lines":[37,39]},"content":"Prefer Azure Disks in LRS -&gt; Standard SSD or Premium SSD v2<br>\n(beware of mount limits per node)"},{"type":"list_item","depth":3,"payload":{"lines":[39,40]},"content":"If mount limits is problem, consider Elastic SAN (iSCSI - in preview) or NAS"}]},{"type":"list_item","depth":2,"payload":{"lines":[40,41]},"content":"High performance","children":[{"type":"list_item","depth":3,"payload":{"lines":[41,43]},"content":"Prefer Azure Disks in LRS -&gt; Premium SSD v2 or Ultra SSD<br>\n(beware of mount limits per node)"}]},{"type":"list_item","depth":2,"payload":{"lines":[43,44]},"content":"Extreme storage performance","children":[{"type":"list_item","depth":3,"payload":{"lines":[44,45]},"content":"Prefer Ultra SSD Azure Disk"},{"type":"list_item","depth":3,"payload":{"lines":[45,46]},"content":"You may consider local storage such as NVMe on L-series VMs","children":[{"type":"list_item","depth":4,"payload":{"lines":[46,47]},"content":"Note every nodepool upgrade = series of failovers, make sure you know how to handle that (for experts only)"},{"type":"list_item","depth":4,"payload":{"lines":[47,48]},"content":"Avoid using hostPath or simple manualy provisioned Local Persistent Volumes"},{"type":"list_item","depth":4,"payload":{"lines":[48,49]},"content":"Look for automated solution such as NativStore"},{"type":"list_item","depth":4,"payload":{"lines":[49,50]},"content":"Consider adding another storage layer such as Portworx (by Pure Storage)"}]}]}]}]},{})</script>
+</body>
+</html>
